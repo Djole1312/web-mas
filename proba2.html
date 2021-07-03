@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proba2.css"> 
+    <!-- <script src="result13.js"></script> -->
+    <script type="text/javascript" src="result13.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/series-label.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+    <title>Measurement Application</title>
+    
+</head>
+<body>
+
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <p class="highcharts-description">
+            Ovaj grafik predstavlja kolicinu stetnih cestica u vazduhu na podrucju Novog Sada. SO2 cestice su jedne od najstetnijih cestica, koje "doprinose" zagadjenju vazduha.
+        </p>
+    </figure>
+   
+    
+    <script>
+        
+        /*function data_sort(a, b) {
+            return new Date(a.date).getTime() - new Date(b.date).getTime();
+        };*/  
+
+       var xData = [];
+        var yData = [];
+        
+        for(let i in data_array){
+            let xNewData = data_array[i].date;
+            xData.push(xNewData);
+            let yNewData = data_array[i].so2;
+            yData.push(yNewData);
+            
+            
+        }
+       
+      
+
+    /*let myRequest = new Request("./result13.json", myInit);
+
+    fetch(myRequest).then(function(response) {
+        return response.json();
+    }).then(function (data) { 
+        console.log(data);
+        
+       data.forEach(element => {
+           yData.push(element.no2),
+           xData.push(element.date)
+       });
+        
+     });*/
+        
+        Highcharts.chart('container', {
+
+            title: {
+            text: 'Air Quality Monitoring-Novi Sad'
+            },
+
+            yAxis: {
+                title: {
+                text: 'so2'
+                }
+            },
+
+            xAxis: {
+                title: {
+                    text: 'DATE',
+                    
+                },
+               categories: xData
+                
+            },
+                
+            legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+            },
+
+            plotOptions: {
+            series: {
+                label: {
+                connectorAllowed: false
+                }
+                }
+            },
+
+            series: [{   
+                name: 'so2',
+                data: yData
+            }],
+
+            responsive: {
+                rules: [{
+                    condition: {
+                    maxWidth: 500
+                    },
+                    chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                    }
+                }]
+            }
+
+        });
+
+ 
+
+    </script>
+    
+
+</body>
+</html>
