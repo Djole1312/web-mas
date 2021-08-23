@@ -172,7 +172,7 @@
               name: "so2",
               data: (function () {
                 let dataSO2 = [];
-                for (let i = 0; i < 72; i++) {
+                for (let i = 0; i < 8; i++) {
                   dataSO2.push({ x: xData[i], y: yDataSo2[i] });
                 }
                 return dataSO2;
@@ -182,7 +182,7 @@
               name: "pm25",
               data: (function () {
                 let dataPM25 = [];
-                for (let j = 0; j < 72; j++) {
+                for (let j = 0; j < 8; j++) {
                   dataPM25.push({ x: xData[j], y: yDataPM25[j] });
                 }
                 return dataPM25;
@@ -289,7 +289,7 @@
                 // generate an array of random data
                 var dataAQI = [];
 
-                for (let i = 0; i < 72; i++) {
+                for (let i = 0; i < 8; i++) {
                   dataAQI.push({ x: xData[i], y: yDataAQI[i] });
                 }
                 return dataAQI;
