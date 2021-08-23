@@ -16,14 +16,26 @@
   </head>
   <body>
     <img src="ftn.jpg" />
-    <div id="container" style="height: 400px; min-width: 310px"></div>
+    <div>
+      <div
+        id="container"
+        style="height: 400px; min-width: 310px; position: relative; left: auto"
+      ></div>
+      <div style="height: 50px; width: 10px"></div>
+      <div
+        id="container1"
+        style="height: 400px; min-width: 310px; position: relative; right: auto"
+      ></div>
+    </div>
     <figure class="highcharts-figure">
       <!-- <div id="container"></div> -->
 
       <p class="highcharts-description">
-        Ovaj grafik predstavlja kolicinu stetnih cestica u vazduhu na podrucju
-        Novog Sada. SO2 cestice su jedne od najstetnijih cestica, koje
-        "doprinose" zagadjenju vazduha.
+        <i>
+          Ovaj grafik predstavlja kolicinu stetnih cestica u vazduhu na podrucju
+          Novog Sada. SO2 cestice su jedne od najstetnijih cestica, koje
+          "doprinose" zagadjenju vazduha.</i
+        >
       </p>
     </figure>
     <img src="sumpor_dioksid.png" class="right" />
@@ -50,37 +62,59 @@
       fetchData().then(() => {
         let xData = [];
         let yDataSo2 = [];
+        let yDataPM25 = [];
+        let yDataAQI = [];
         /*let yDataNo2 = [];
-        let yDataPM10 = [];
-        let yDataCo = [];
-        let scrollNum;*/
+          let yDataPM10 = [];
+          let yDataCo = [];*/
 
         for (let i = 0; i < data.data.length; i++) {
           console.log(data.data.length);
-          let xNewData = data.data[i].timestamp_local;
 
+          let xNewData = data.data[i].timestamp_local;
           xData.push(xNewData);
 
           let yNewDataSo2 = data.data[i].so2;
           yDataSo2.push(yNewDataSo2);
+
+          let yNewDataPM25 = data.data[i].pm25;
+          yDataPM25.push(yNewDataPM25);
+
+          let yNewDataAQI = data.data[i].aqi;
+          yDataAQI.push(yNewDataAQI);
         }
 
+        // prvi grafik
         Highcharts.chart("container", {
           chart: {
-            type: "spline",
+            type: "column",
             marginRight: 10,
             events: {
               load: function () {
                 // funkcija koja mi update-je podatke svaki sekund i dodaje novi podatak na grafik
-                var series = this.series[0];
+                var seriesSO2 = this.series[0];
+                var seriesPM25 = this.series[1];
                 let counter = 0;
                 setInterval(() => {
-                  console.log(counter, xData[counter], yDataSo2[counter]);
+                  console.log(
+                    counter,
+                    xData[counter],
+                    yDataSo2[counter],
+                    "SO2",
+                    yDataPM25[counter],
+                    "PM25"
+                  );
                   if (counter < data.data.length) {
-                    const x = xData[counter];
-                    const y = yDataSo2[counter];
-                    series.addPoint([x, y], true, true);
+                    let x = xData[counter];
+                    let y = yDataSo2[counter];
+                    let y1 = yDataPM25[counter];
+
+                    seriesSO2.addPoint([x, y], true, true);
+                    seriesPM25.addPoint([x, y1], true, true);
                   }
+                  /*if (counter == data.data.length - 1) {
+                      counter = 0;
+                    }*/
                   counter++;
                 }, 1000);
               },
@@ -94,23 +128,13 @@
           title: {
             text: "Air Quality Monitoring-Novi Sad",
           },
-          //ovo ispod i nije toliko bitno moze se zakomentarisati
-          accessibility: {
-            announceNewData: {
-              enabled: true,
-              minAnnounceInterval: 15000,
-              announcementFormatter: function (allSeries, newSeries, newPoint) {
-                if (newPoint) {
-                  return "New point added. Value: " + newPoint.y;
-                }
-                return false;
-              },
-            },
-          },
 
           xAxis: {
+            title: {
+              text: "Time",
+            },
+            categories: xData,
             type: "datetime",
-            tickPixelInterval: 150,
           },
 
           yAxis: {
@@ -126,13 +150,17 @@
             ],
           },
 
-          tooltip: {
-            headerFormat: "<b>{series.name}</b><br/>",
-            pointFormat: "{point.x:%Y-%m-%d %H:%M:%S}<br/>{point.y:.2f}",
-          },
-
           legend: {
             enabled: false,
+            layout: "vertical",
+            align: "left",
+            x: 80,
+            verticalAlign: "top",
+            y: 55,
+            floating: true,
+            backgroundColor:
+              (Highcharts.theme && Highcharts.theme.legendBackgroundColor) ||
+              "#FFFFFF",
           },
 
           exporting: {
@@ -143,10 +171,128 @@
             {
               name: "so2",
               data: (function () {
+                let dataSO2 = [];
+                for (let i = 0; i < 72; i++) {
+                  dataSO2.push({ x: xData[i], y: yDataSo2[i] });
+                }
+                return dataSO2;
+              })(),
+            },
+            {
+              name: "pm25",
+              data: (function () {
+                let dataPM25 = [];
+                for (let j = 0; j < 72; j++) {
+                  dataPM25.push({ x: xData[j], y: yDataPM25[j] });
+                }
+                return dataPM25;
+              })(),
+            },
+          ],
+        });
+
+        // drugi grafik
+        Highcharts.chart("container1", {
+          chart: {
+            type: "line",
+            marginRight: 8,
+            events: {
+              load: function () {
+                // funkcija koja mi update-je podatke svaki sekund i dodaje novi podatak na grafik
+                var series = this.series[0];
+                let counter = 0;
+                setInterval(() => {
+                  console.log(
+                    counter,
+                    xData[counter],
+                    yDataAQI[counter],
+                    "AQI"
+                  );
+                  if (counter < data.data.length) {
+                    let x = xData[counter];
+                    let y = yDataAQI[counter];
+
+                    series.addPoint([x, y], true, true);
+                  }
+                  if (counter == data.data.length - 1) {
+                    counter = 0;
+                  }
+                  counter++;
+                }, 1000);
+              },
+            },
+          },
+
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: true,
+              },
+              enableMouseTracking: false,
+            },
+          },
+
+          time: {
+            useUTC: false,
+          },
+
+          title: {
+            text: "AQI Monitoring-Novi Sad",
+          },
+
+          xAxis: {
+            type: "datetime",
+            categories: xData,
+          },
+
+          yAxis: {
+            plotLines: [
+              {
+                value: 0,
+                width: 1,
+                color: "#808080",
+              },
+            ],
+            className: "highcharts-color-0",
+            title: {
+              text: "AQI",
+            },
+          },
+
+          className: "highcharts-color-1",
+          opposite: true,
+          title: {
+            text: "AQI Monitoring-Novi Sad",
+          },
+
+          legend: {
+            enabled: false,
+            layout: "vertical",
+            align: "left",
+            x: 80,
+            verticalAlign: "top",
+            y: 55,
+            floating: true,
+            backgroundColor:
+              (Highcharts.theme && Highcharts.theme.legendBackgroundColor) ||
+              "#FFFFFF",
+          },
+
+          exporting: {
+            enabled: false,
+          },
+
+          series: [
+            {
+              name: "aqi",
+              data: (function () {
                 // generate an array of random data
-                var data = [];
-                data.push(xData[0], yDataSo2[0]);
-                return data;
+                var dataAQI = [];
+
+                for (let i = 0; i < 72; i++) {
+                  dataAQI.push({ x: xData[i], y: yDataAQI[i] });
+                }
+                return dataAQI;
               })(),
             },
           ],

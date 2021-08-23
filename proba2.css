@@ -1,6 +1,6 @@
 
 html {
-    background-color: bisque;
+    background-color: rgb(238, 210, 176);
 }
 
 .highcharts-figure .highcharts-data-table table {
@@ -10,10 +10,10 @@ html {
 }
 
 .highcharts-data-table table {
-    background-color: rgb(162, 200, 200);
+    background-color: rgb(127, 163, 163);
 	font-family: Verdana, sans-serif;
 	border-collapse: collapse;
-	border: 1px solid #EBEBEB;
+	border: 1px solid #ada6a6;
 	margin: 10px auto;
 	text-align: center;
 	width: 100%;
@@ -22,7 +22,7 @@ html {
 .highcharts-data-table caption {
     padding: 1em 0;
     font-size: 1.2em;
-    color: #555;
+    color: #34495E;
 }
 .highcharts-data-table th {
 	font-weight: 600;
@@ -32,10 +32,10 @@ html {
     padding: 0.5em;
 }
 .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
+    background: #34495E;
 }
 .highcharts-data-table tr:hover {
-    background: #f1f7ff;
+    background: #34495E;
 }
 
 .right {
@@ -51,4 +51,30 @@ html {
     height: 100px;  
     text-align: center;
     flex-shrink: initial;
+}
+
+.highcharts-color-0 {
+	fill: #7cb5ec;
+	stroke: #7cb5ec;
+}
+.highcharts-axis.highcharts-color-0 .highcharts-axis-line {
+	stroke: #7cb5ec;
+}
+.highcharts-axis.highcharts-color-0 text {
+	fill: #7cb5ec;
+}
+.highcharts-color-1 {
+	fill: #90ed7d;
+	stroke: #90ed7d;
+}
+.highcharts-axis.highcharts-color-1 .highcharts-axis-line {
+	stroke: #90ed7d;
+}
+.highcharts-axis.highcharts-color-1 text {
+	fill: #90ed7d;
+}
+
+
+.highcharts-yaxis .highcharts-axis-line {
+	stroke-width: 2px;
 }
