@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="logo2.png" type="image/x-icon" />
     <link rel="stylesheet" href="proba2.css" />
-    <!-- <script src="result13.js"></script> -->
-    <!-- <script type="text/javascript" src="result13.js"></script> -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/series-label.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -38,9 +36,9 @@
       <p class="highcharts-description">
         <i>
           Prvi grafik predstavlja kolicinu stetnih cestica u vazduhu na podrucju
-          Novog Sada. SO2 i PM25 cestice su jedne od najstetnijih koje
+          Novog Sada. PM25 i PM10 cestice su jedne od najstetnijih koje
           "doprinose" zagadjenju vazduha. Drugi grafik predstavlja nivo
-          zagadjenosti vazduha(AQI index).</i
+          zagadjenosti vazduha(AQI index) i ozona.</i
         >
       </p>
       <button onclick="buttonClick()"></button>
@@ -68,12 +66,11 @@
 
       fetchData().then(() => {
         let xData = [];
-        let yDataSo2 = [];
+        //let yDataSo2 = [];
         let yDataPM25 = [];
         let yDataAQI = [];
-        /*let yDataNo2 = [];
-          let yDataPM10 = [];
-          let yDataCo = [];*/
+        let yDataO3 = [];
+        let yDataPM10 = [];
 
         for (let i = 0; i < data.data.length; i++) {
           console.log(data.data.length);
@@ -81,14 +78,20 @@
           let xNewData = data.data[i].timestamp_local;
           xData.push(xNewData);
 
-          let yNewDataSo2 = data.data[i].so2;
-          yDataSo2.push(yNewDataSo2);
+          // let yNewDataSo2 = data.data[i].so2;
+          // yDataSo2.push(yNewDataSo2);
 
           let yNewDataPM25 = data.data[i].pm25;
           yDataPM25.push(yNewDataPM25);
 
           let yNewDataAQI = data.data[i].aqi;
           yDataAQI.push(yNewDataAQI);
+
+          let yNewDataO3 = data.data[i].o3;
+          yDataO3.push(yNewDataO3);
+
+          let yNewDataPM10 = data.data[i].pm10;
+          yDataPM10.push(yNewDataPM10);
         }
 
         // prvi grafik
@@ -99,31 +102,35 @@
             events: {
               load: function () {
                 // funkcija koja mi update-je podatke svaki sekund i dodaje novi podatak na grafik
-                var seriesSO2 = this.series[0];
-                var seriesPM25 = this.series[1];
+                //var seriesSO2 = this.series[0];
+                var seriesPM25 = this.series[0];
+                var seriesPM10 = this.series[1];
                 let counter = 0;
                 setInterval(() => {
                   console.log(
                     counter,
                     xData[counter],
-                    yDataSo2[counter],
-                    "SO2",
+                    // yDataSo2[counter],
+                    // "SO2",
                     yDataPM25[counter],
-                    "PM25"
+                    "PM25",
+                    yDataPM10[counter],
+                    "PM10"
                   );
                   if (counter < data.data.length) {
                     let x = xData[counter];
-                    let y = yDataSo2[counter];
-                    let y1 = yDataPM25[counter];
+                    //let y = yDataSo2[counter];
+                    let y = yDataPM25[counter];
+                    let y1 = yDataPM10[counter];
 
-                    seriesSO2.addPoint([x, y], true, true);
-                    seriesPM25.addPoint([x, y1], true, true);
+                    seriesPM25.addPoint([x, y], true, true);
+                    seriesPM10.addPoint([x, y1], true, true);
                   }
                   if (counter == data.data.length - 1) {
                     counter = 0;
                   }
                   counter++;
-                }, 1000);
+                }, 1500);
               },
             },
           },
@@ -146,7 +153,7 @@
 
           yAxis: {
             title: {
-              text: "Value",
+              text: "PM25 & PM10",
             },
             plotLines: [
               {
@@ -176,16 +183,6 @@
 
           series: [
             {
-              name: "so2",
-              data: (function () {
-                let dataSO2 = [];
-                for (let i = 0; i < 8; i++) {
-                  dataSO2.push({ x: xData[i], y: yDataSo2[i] });
-                }
-                return dataSO2;
-              })(),
-            },
-            {
               name: "pm25",
               data: (function () {
                 let dataPM25 = [];
@@ -193,6 +190,16 @@
                   dataPM25.push({ x: xData[j], y: yDataPM25[j] });
                 }
                 return dataPM25;
+              })(),
+            },
+            {
+              name: "pm10",
+              data: (function () {
+                let dataPM10 = [];
+                for (let j = 0; j < 7; j++) {
+                  dataPM10.push({ x: xData[j], y: yDataPM10[j] });
+                }
+                return dataPM10;
               })(),
             },
           ],
@@ -206,26 +213,31 @@
             events: {
               load: function () {
                 // funkcija koja mi update-je podatke svaki sekund i dodaje novi podatak na grafik
-                var series = this.series[0];
+                var seriesAQI = this.series[0];
+                var seriesO3 = this.series[1];
                 let counter = 0;
                 setInterval(() => {
                   console.log(
                     counter,
                     xData[counter],
                     yDataAQI[counter],
-                    "AQI"
+                    "AQI",
+                    yDataO3[counter],
+                    "O3"
                   );
                   if (counter < data.data.length) {
                     let x = xData[counter];
                     let y = yDataAQI[counter];
+                    let y1 = yDataO3[counter];
 
-                    series.addPoint([x, y], true, true);
+                    seriesAQI.addPoint([x, y], true, true);
+                    seriesO3.addPoint([x, y1], true, true);
                   }
                   if (counter == data.data.length - 1) {
                     counter = 0;
                   }
                   counter++;
-                }, 1000);
+                }, 1500);
               },
             },
           },
@@ -265,7 +277,7 @@
             ],
             className: "highcharts-color-0",
             title: {
-              text: "AQI",
+              text: "AQI & O3",
             },
           },
 
@@ -298,11 +310,21 @@
               data: (function () {
                 // generate an array of random data
                 var dataAQI = [];
-
                 for (let i = 0; i < 7; i++) {
                   dataAQI.push({ x: xData[i], y: yDataAQI[i] });
                 }
                 return dataAQI;
+              })(),
+            },
+            {
+              name: "o3",
+              data: (function () {
+                // generate an array of random data
+                var dataO3 = [];
+                for (let i = 0; i < 7; i++) {
+                  dataO3.push({ x: xData[i], y: yDataO3[i] });
+                }
+                return dataO3;
               })(),
             },
           ],
