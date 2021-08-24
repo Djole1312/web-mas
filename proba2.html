@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="logo2.png" type="image/x-icon" />
     <link rel="stylesheet" href="proba2.css" />
     <!-- <script src="result13.js"></script> -->
     <!-- <script type="text/javascript" src="result13.js"></script> -->
@@ -15,7 +16,13 @@
     <title>Measurement Application</title>
   </head>
   <body>
-    <img src="ftn.jpg" />
+    <header>
+      <img src="ftn.jpg" />
+      <h1 style="position: inherit; text-align: center; text-shadow: gray 2px">
+        MEASUREMENT APPLICATION
+      </h1>
+    </header>
+
     <div>
       <div
         id="container"
@@ -28,8 +35,6 @@
       ></div>
     </div>
     <figure class="highcharts-figure">
-      <!-- <div id="container"></div> -->
-
       <p class="highcharts-description">
         <i>
           Prvi grafik predstavlja kolicinu stetnih cestica u vazduhu na podrucju
@@ -38,8 +43,9 @@
           zagadjenosti vazduha(AQI index).</i
         >
       </p>
+      <button onclick="buttonClick()"></button>
     </figure>
-    <img src="sumpor_dioksid.png" class="right" />
+    <img src="sumpor_dioksid.png" class="transparent2" />
     <script>
       let data;
       const fetchData = async () => {
@@ -113,9 +119,9 @@
                     seriesSO2.addPoint([x, y], true, true);
                     seriesPM25.addPoint([x, y1], true, true);
                   }
-                  /*if (counter == data.data.length - 1) {
-                      counter = 0;
-                    }*/
+                  if (counter == data.data.length - 1) {
+                    counter = 0;
+                  }
                   counter++;
                 }, 1000);
               },
@@ -183,7 +189,7 @@
               name: "pm25",
               data: (function () {
                 let dataPM25 = [];
-                for (let j = 0; j < 8; j++) {
+                for (let j = 0; j < 7; j++) {
                   dataPM25.push({ x: xData[j], y: yDataPM25[j] });
                 }
                 return dataPM25;
@@ -242,6 +248,9 @@
           },
 
           xAxis: {
+            title: {
+              text: "Time",
+            },
             type: "datetime",
             categories: xData,
           },
@@ -290,7 +299,7 @@
                 // generate an array of random data
                 var dataAQI = [];
 
-                for (let i = 0; i < 8; i++) {
+                for (let i = 0; i < 7; i++) {
                   dataAQI.push({ x: xData[i], y: yDataAQI[i] });
                 }
                 return dataAQI;
